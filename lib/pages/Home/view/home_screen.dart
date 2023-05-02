@@ -27,12 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         centerTitle: true,
         
-        title: Text("Edufiy",style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),),),
+        title: Text("Edufly",style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w700),),),
 
      drawer: AppDrawer(
       
      ),
-      body: GridView.count(crossAxisCount: 2, 
+      body: GridView.count(crossAxisCount: 3, 
     
      crossAxisSpacing: 10.w,
         
@@ -54,7 +54,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         title: "Take Attendance",
                         imageLInk: "assets/mobile.png")),
                
-        
+            InkWell(
+                    onTap: () {
+                      
+                    },
+                    child: deshboardItem(
+                        title: "Syllabus",
+                        imageLInk: "assets/syllabus.png")),
           
 
                 InkWell(

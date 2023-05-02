@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
  
 environment:
-  sdk: '>=2.19.3 <3.0.0'
+  sdk: '>=2.18.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,7 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
+  flutter: 
     sdk: flutter
 
 
@@ -38,10 +38,21 @@ dependencies:
   flutter_screenutil: ^5.7.0
   get: ^4.6.5
   font_awesome_flutter: ^10.4.0
+  dots_indicator: ^2.1.0
+ 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.11.0
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/edufiy.png"
+  min_sdk_android: 21
+ 
+ # android min sdk min:16, default 21
+ 
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

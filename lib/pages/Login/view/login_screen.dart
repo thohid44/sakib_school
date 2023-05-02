@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:sakib_school/Student/StdHome/view/std_home.dart';
 import 'package:sakib_school/Utils/colors.dart';
+import 'package:sakib_school/Utils/constant.dart';
 import 'package:sakib_school/Widget/customButtonOne.dart';
 import 'package:sakib_school/Widget/customTextForm.dart';
 
@@ -26,9 +28,16 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: 150.h,), 
+            Container(
+              height: 100.h, 
+              width: 100.w,
+             child:Image.asset("assets/edufiy.png")
+            ), 
+             SizedBox(height: 100.h,), 
             _textInputForm(controller: email, hint: "Enter your ID", icon: Icon(Icons.email)),
             SizedBox(
               height: 20.h,
@@ -47,8 +56,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
                 onTab: () {
-                  Navigator.push(context,
+                  print("Login");
+                  if(email.text=="teacher@gmail.com"){
+  Navigator.push(context,
                       MaterialPageRoute(builder: (context) => HomeScreen()));
+                  }
+                              if(email.text=="student@gmail.com"){
+  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => StudentHome()));
+                  }
                 }),
           ],
         ),
