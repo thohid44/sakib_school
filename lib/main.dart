@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       builder: (context , child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Sakib School',
+          title: 'EduFiy',
       
           theme: ThemeData(
             primarySwatch: Colors.blue,

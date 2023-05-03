@@ -39,6 +39,8 @@ dependencies:
   get: ^4.6.5
   font_awesome_flutter: ^10.4.0
   dots_indicator: ^2.1.0
+  get_storage: ^2.1.1
+  http: ^0.13.5
  
 
 dev_dependencies:
