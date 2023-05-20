@@ -7,6 +7,7 @@ import 'package:sakib_school/Utils/colors.dart';
 import 'package:sakib_school/Utils/constant.dart';
 import 'package:sakib_school/Widget/customButtonOne.dart';
 import 'package:sakib_school/Widget/customTextForm.dart';
+import 'package:sakib_school/pages/Login/controller/login_con.dart';
 
 import '../../Home/view/home_screen.dart';
 
@@ -21,6 +22,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+var  con = Get.put(LoginController()); 
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
                   onTab: () {
-                    print("Login");
-                    if(email.text=="teacher@gmail.com"){
-          Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
-                    }
-                                if(email.text=="student@gmail.com"){
-          Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => StudentHome()));
-                    }
+           con.login(email.toString(), password.toString());
                   }),
             ],
           ),
