@@ -26,6 +26,7 @@ var  con = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
+  
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color.fromRGBO(255, 255, 255, 1),

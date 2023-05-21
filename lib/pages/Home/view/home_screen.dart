@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:sakib_school/Utils/colors.dart';
 import 'package:sakib_school/Widget/app_drawer.dart';
 import 'package:sakib_school/Widget/custom_Appbar.dart';
+import 'package:sakib_school/pages/Teachers/Attendance/view/attendance_page.dart';
+import 'package:sakib_school/pages/Teachers/Classes/controller/ClassesController.dart';
 
 
 
@@ -19,6 +21,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+      var conCls= Get.put(ClassesController()); 
+    conCls.fetchClass(); 
+
     return SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
@@ -41,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
           
                 InkWell(
                     onTap: () {
-                      
+                      Get.to(AttendancePage()); 
                     },
                     child: deshboardItem(
                         title: " Attendence",
