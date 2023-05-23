@@ -8,8 +8,9 @@ import 'package:sakib_school/pages/Teachers/Section/model/SectionModel.dart';
 
 class SectionController extends GetxController {
   var isLoading = false.obs;
-  
+
   var clint = http.Client();
+  List<Sections> sections = <Sections>[].obs;
 
   Future<SectionsModel?> getSection() async {
     var token = "79|uYrWRG0rX9odolGNIA5n3POpYCaRTcbBYM8zMO43";
@@ -18,20 +19,19 @@ class SectionController extends GetxController {
         Uri.parse("https://edufiy.alivedevs.cf/api/teacher/section"),
         headers: {
           'Accept': 'application/json',
-          'Authorization': 'Bearer ' + token,
+          'Authorization': 'Bearer ' +token,
         },
       );
       var jsonData = jsonDecode(response.body);
       // print(jsonDecode(response.body));
       if (response.statusCode == 201) {
-        return SectionsModel.fromJson(jsonData);
-      }else{
-        return SectionsModel.fromJson(jsonData);
+        SectionsModel data = SectionsModel.fromJson(jsonData);
+        sections = data.data!;
+        update(); 
       }
-      
     } catch (e) {
       print("Print Error $e");
     }
-    update(); 
+    update();
   }
 }

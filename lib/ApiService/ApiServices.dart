@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:sakib_school/Utils/constant.dart';
 import 'package:sakib_school/Utils/preKey.dart';
 
-import '../pages/Home/view/home_screen.dart';
+import '../pages/Teachers/Home/view/home_screen.dart';
 
 class ApiServices {
   var clint = http.Client();

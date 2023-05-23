@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:sakib_school/Utils/preKey.dart';
-import 'package:sakib_school/pages/Home/view/home_screen.dart';
+import 'package:sakib_school/pages/Teachers/Home/view/home_screen.dart';
 
 
 class LoginController extends GetxController {

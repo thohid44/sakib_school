@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sakib_school/Utils/colors.dart';
 import 'package:sakib_school/pages/Login/view/login_screen.dart';
+import 'package:sakib_school/pages/Teachers/Profile/view/teacher_profile_view.dart';
 
-import '../pages/Home/view/home_screen.dart';
+
+import '../pages/Teachers/Home/view/home_screen.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({super.key});
@@ -59,7 +61,9 @@ class _AppDrawerState extends State<AppDrawer> {
                             fontWeight: FontWeight.bold,
                             color: Colors.white),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(TeacherProfile()); 
+                      },
                     ),
                     ListTile(
                       title: const Text(

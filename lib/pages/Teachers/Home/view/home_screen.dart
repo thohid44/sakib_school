@@ -46,14 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
           
                 InkWell(
                     onTap: () {
-                      Get.to(AttendancePage()); 
+                     
                     },
                     child: deshboardItem(
                         title: " Attendence",
                         imageLInk: "assets/attendance.png")),
                 InkWell(
                     onTap: () {
-                      
+                       Get.to(AttendancePage()); 
                     },
                     child: deshboardItem(
                         title: "Take Attendance",
