@@ -19,12 +19,14 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   var stdCon = Get.put(StudentController());
+
   var classId;
   var sectionId;
   bool status = false;
   @override
   Widget build(BuildContext context) {
     var conCls = Get.put(ClassesController());
+    print(stdCon.sendAttendance.length);
     conCls.fetchClass();
     var sectionController = Get.put(SectionController());
     sectionController.getSection();
@@ -120,13 +122,44 @@ class _AttendancePageState extends State<AttendancePage> {
                 return ListView.builder(
                     itemCount:  stdCon.students.length,
                     itemBuilder: (context, index) {
+                      var satus = stdCon.students[index].attendance;
                       return ListTile(
                         title: Text(
                           stdCon.students[index].userName.toString(),
                           style: TextStyle(color: Colors.black),
                         ),
-                        trailing: Switch(value: true, onChanged: (value){
+                        trailing: Switch(value: stdCon.sendAttendance[index]['status'], onChanged: (value){
+                     
+                                   for (int i = 0;
+                                          i <= stdCon.sendAttendance.length;
+                                          i++) {
+                                        if (stdCon.sendAttendance[i]
+                                                    ['student_id'] ==
+                                                stdCon.sendAttendance[index]
+                                                    ['student_id'] &&
+                                            stdCon.sendAttendance[index]
+                                                    ['status']) {
+                                       
+                                            setState(() {
+                                              stdCon.sendAttendance[index]
+                                                ['status'] = false;
+                                            });
+                                         
+                              
+                                        } else if(stdCon.sendAttendance[i]
+                                                    ['student_id'] ==
+                                                stdCon.sendAttendance[index]
+                                                    ['student_id'] &&
+                                            stdCon.sendAttendance[index]
+                                                    ['status']==false){
+                                                      setState(() {
+                                              stdCon.sendAttendance[index]
+                                                ['status'] = true;
+                                            });
 
+                                        }
+                                        //print(mobile);
+                                      }
                         }),
                       );
                     });

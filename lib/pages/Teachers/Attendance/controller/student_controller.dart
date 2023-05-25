@@ -11,7 +11,7 @@ class StudentController extends GetxController {
   var isLoading = false.obs;
   List<Students> students = <Students>[].obs;
   var clint = http.Client();
-
+List<Map> sendAttendance = <Map>[].obs; 
   Future<StudentModel?> getStudent(cls, sec) async {
     var token = "79|uYrWRG0rX9odolGNIA5n3POpYCaRTcbBYM8zMO43";
     try {
@@ -29,6 +29,13 @@ class StudentController extends GetxController {
       if (response.statusCode == 201) {
         StudentModel data = StudentModel.fromJson(jsonData);
         students = data.data!;
+        sendAttendance = students.map((e) {
+          return {
+         "student_id": e.id,
+            "status": true
+          };
+        }).toList();
+        print(sendAttendance.first); 
         update();
       }
     } catch (e) {
