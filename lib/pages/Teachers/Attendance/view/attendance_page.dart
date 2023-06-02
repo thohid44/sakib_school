@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sakib_school/Utils/colors.dart';
 import 'package:sakib_school/pages/Teachers/Attendance/controller/student_controller.dart';
 import 'package:sakib_school/pages/Teachers/Section/controller/SectionController.dart';
 
 import '../../Classes/controller/ClassesController.dart';
+import 'package:http/http.dart' as http;
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
@@ -19,7 +23,6 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   var stdCon = Get.put(StudentController());
-
   var classId;
   var sectionId;
   bool status = false;
@@ -35,7 +38,7 @@ class _AttendancePageState extends State<AttendancePage> {
         child: Scaffold(
       appBar: AppBar(
         title: Text("Attendance"),
-        centerTitle: true, 
+        centerTitle: true,
         backgroundColor: baseColor,
       ),
       body: SingleChildScrollView(
@@ -116,59 +119,125 @@ class _AttendancePageState extends State<AttendancePage> {
             SizedBox(
               height: 15.h,
             ),
-          status==true?  Container(
-              height: 500.h,
-              child: GetBuilder<StudentController>(builder: (context) {
-                return ListView.builder(
-                    itemCount:  stdCon.students.length,
-                    itemBuilder: (context, index) {
-                      var satus = stdCon.students[index].attendance;
-                      return ListTile(
-                        title: Text(
-                          stdCon.students[index].userName.toString(),
-                          style: TextStyle(color: Colors.black),
-                        ),
-                        trailing: Switch(value: stdCon.sendAttendance[index]['status'], onChanged: (value){
-                     
-                                   for (int i = 0;
-                                          i <= stdCon.sendAttendance.length;
-                                          i++) {
-                                        if (stdCon.sendAttendance[i]
-                                                    ['student_id'] ==
-                                                stdCon.sendAttendance[index]
-                                                    ['student_id'] &&
-                                            stdCon.sendAttendance[index]
-                                                    ['status']) {
-                                       
-                                            setState(() {
+            status == true
+                ? Container(
+                    height: 500.h,
+                    child: GetBuilder<StudentController>(builder: (context) {
+                      return ListView.builder(
+                          itemCount: stdCon.students.length,
+                          itemBuilder: (context, index) {
+                            var satus = stdCon.students[index].attendance;
+                            return ListTile(
+                              title: Text(
+                                stdCon.students[index].userName.toString(),
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              trailing: Switch(
+                                  value: stdCon.sendAttendance[index]['status'],
+                                  onChanged: (value) {
+                                    for (int i = 0;
+                                        i <= stdCon.sendAttendance.length;
+                                        i++) {
+                                      if (stdCon.sendAttendance[i]
+                                                  ['student_id'] ==
                                               stdCon.sendAttendance[index]
-                                                ['status'] = false;
-                                            });
-                                         
-                              
-                                        } else if(stdCon.sendAttendance[i]
-                                                    ['student_id'] ==
-                                                stdCon.sendAttendance[index]
-                                                    ['student_id'] &&
-                                            stdCon.sendAttendance[index]
-                                                    ['status']==false){
-                                                      setState(() {
+                                                  ['student_id'] &&
+                                          stdCon.sendAttendance[index]
+                                              ['status']) {
+                                        setState(() {
+                                          stdCon.sendAttendance[index]
+                                              ['status'] = false;
+                                        });
+                                      } else if (stdCon.sendAttendance[i]
+                                                  ['student_id'] ==
                                               stdCon.sendAttendance[index]
-                                                ['status'] = true;
-                                            });
-
-                                        }
-                                        //print(mobile);
+                                                  ['student_id'] &&
+                                          stdCon.sendAttendance[index]
+                                                  ['status'] ==
+                                              false) {
+                                        setState(() {
+                                          stdCon.sendAttendance[index]
+                                              ['status'] = true;
+                                        });
                                       }
-                        }),
-                      );
-                    });
-              }),
-            ): Center(child: Text("Select Date, Class and Section",
-                style: TextStyle(color: Colors.black, fontSize: 20.sp, ),),)
+                                      //print(mobile);
+                                    }
+                                  }),
+                            );
+                          });
+                    }),
+                  )
+                : Center(
+                    child: Text(
+                      "Select Date, Class and Section",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20.sp,
+                      ),
+                    ),
+                  ),
+            InkWell(
+              onTap: () {
+                //  print(stdCon.sendAttendance);
+                saveAttendance();
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: 150.w,
+                height: 40.h,
+                decoration: BoxDecoration(color: baseColor),
+                child: Text(
+                  "Submit",
+                  style: TextStyle(
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            )
           ],
         ),
       ),
     ));
+  }
+
+  final _box = GetStorage();
+  var client = http.Client();
+  bool isLoading = false;
+  saveAttendance() async {
+    var token = "79|uYrWRG0rX9odolGNIA5n3POpYCaRTcbBYM8zMO43";
+
+    print(classId);
+    try {
+      print("object");
+      var map = {
+        "date": "25-05-2023",
+        "class_id": "1",
+        "section_id": "1",
+        "attendance": [
+          {"student_id": "9", "status": true},
+          {"student_id": "11", "status": true},
+          {"student_id": "12", "status": false}
+        ].toString()
+      };
+      var finalData = jsonEncode(map);
+
+      var response = await client.post(
+          Uri.parse("https://edufiy.alivedevs.cf/api/teacher/attendance-store"),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + token,
+          },
+          body: map);
+      print(response.body);
+      if (response.statusCode == 201) {
+        print(response.statusCode);
+        var jsonData = jsonDecode(response.body);
+
+        print(jsonData);
+      }
+    } catch (e) {
+      print("Error $e");
+    }
   }
 }
