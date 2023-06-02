@@ -1,63 +1,62 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:sakib_school/Utils/constant.dart';
-import 'package:sakib_school/Utils/preKey.dart';
+import 'package:sakib_school/Utils/localstorekey.dart';
 
-import '../pages/Teachers/Home/view/home_screen.dart';
+class ApiService {
+  static String baseUrl = 'https://edufiy.alivedevs.cf/api';
+  static var client = http.Client();
+  var token = '';
 
-class ApiServices {
-  var clint = http.Client();
-  final _box = GetStorage(); 
-
+  final _box = GetStorage();
   var isLoading = false.obs;
-   String baseUrl = "https://edufiy.alivedevs.cf/api";
+//sPoint,des,note, prefered,howmany, currency,vehicled
 
-  Future getData(path) async {
-   //var token = _box.read(Prekey.token);
-   var token ="79|uYrWRG0rX9odolGNIA5n3POpYCaRTcbBYM8zMO43";
-    try {
-      var response = await clint.get(
-        Uri.parse("https://edufiy.alivedevs.cf/api/teacher/class"),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer '+token,
-        },
-      );
-    } catch (e) {
-      print("Print Error $e");
-    }
-  }
+  postData(mapData, String path) async {
+// var token = _box.read(LocalStoreKey.token);
+    var token = "113|xUpknkIcP6H1u8EeajwKSaP8YOmcCNVaL1MIOhFh"; 
 
-  var userClient = http.Client();
-  postData(para,path) async {
     try {
       isLoading(true);
-      var response = await http.post(Uri.parse(baseUrl+path),
-          headers: {
-            'Accept': "application/json"
-          },
-          body: {
-            "email": "xoqulyvy@mailinator.com",
-            "password": "123123123",
-            "role_id": '5'
-          });
-      var jsonData = jsonDecode(response.body);
-
+      var response =
+          await http.post(Uri.parse(baseUrl+path),
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token,
+              },
+              body: mapData);
       if (response.statusCode == 201) {
+        print(response.statusCode);
+        var jsonData = jsonDecode(response.body);
         print(jsonData);
-        var token = jsonData['token'];
-        if (token != null) {
-          Get.to(HomeScreen());
-        }
-      } else {
-        Get.snackbar(
-          "Login Error",
-          "User name or Password is Wrong",
-          duration: Duration(seconds: 2),
-        );
+        Get.snackbar("Get Ride", "Successfully Store",
+            backgroundColor: Colors.deepOrange);
+      }
+    } catch (e) {
+      print("Error $e");
+    }
+  }
+   getData(String path) async {
+// var token = _box.read(LocalStoreKey.token);
+    var token = "113|xUpknkIcP6H1u8EeajwKSaP8YOmcCNVaL1MIOhFh"; 
+
+    try {
+      isLoading(true);
+      var response =
+          await http.get(Uri.parse(baseUrl+path),
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + token,
+              },
+         );
+      if (response.statusCode == 201) {
+      
+        var jsonData = jsonDecode(response.body);
+       print(jsonData);
+     
       }
     } catch (e) {
       print("Error $e");

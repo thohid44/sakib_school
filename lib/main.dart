@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sakib_school/Parents/Profile/views/parent_profile.dart';
 import 'package:sakib_school/Student/StdHome/view/student_Home.dart';
 import 'package:sakib_school/pages/Teachers/Home/view/home_screen.dart';
 import 'pages/Login/view/login_screen.dart';
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child:HomeScreen(),
+      child:ParentProfile(),
     );
   }
 }
