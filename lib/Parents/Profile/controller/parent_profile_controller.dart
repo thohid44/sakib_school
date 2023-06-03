@@ -5,12 +5,12 @@ import 'package:sakib_school/ApiService/ApiServices.dart';
 import 'package:sakib_school/Parents/Profile/model/parentsModel.dart';
 
 class ParentProfileController extends GetxController {
+  ParentsProfile? profile;
   getProfile() async {
     var response = await ApiService().getData("path");
     var jsonData = jsonDecode(response.body);
     if (response.StatusCode == 201) {
-      ParentsProfile data = ParentsProfile.fromJson(jsonData); 
-      
+      return ParentsProfile.fromJson(jsonData);   
     }
   }
 }
