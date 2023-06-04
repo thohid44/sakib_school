@@ -9,7 +9,7 @@ import 'package:sakib_school/Utils/localstorekey.dart';
 class ApiService {
   static String baseUrl = 'https://edufiy.alivedevs.cf/api';
   static var client = http.Client();
-  var token = '';
+
 
   final _box = GetStorage();
   var isLoading = false.obs;
@@ -39,7 +39,7 @@ class ApiService {
       print("Error $e");
     }
   }
-   getData(String path) async {
+  Future getData(String path) async {
 // var token = _box.read(LocalStoreKey.token);
     var token = "113|xUpknkIcP6H1u8EeajwKSaP8YOmcCNVaL1MIOhFh"; 
 
@@ -52,12 +52,8 @@ class ApiService {
                 'Authorization': 'Bearer ' + token,
               },
          );
-      if (response.statusCode == 201) {
-      
-        var jsonData = jsonDecode(response.body);
-       print(jsonData);
+     return response; 
      
-      }
     } catch (e) {
       print("Error $e");
     }

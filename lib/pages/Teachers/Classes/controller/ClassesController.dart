@@ -27,6 +27,7 @@ class ClassesController extends GetxController {
       // print(jsonDecode(response.body));
       if (response.statusCode == 201) {
         ClassModel data = ClassModel.fromJson(jsonData);
+        
         classList = data.data!;
         update();
       }
