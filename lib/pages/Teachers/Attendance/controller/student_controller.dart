@@ -31,7 +31,7 @@ List<Map> sendAttendance = <Map>[].obs;
         students = data.data!;
         sendAttendance = students.map((e) {
           return {
-         "student_id": e.id,
+         "student_id": e.id.toString(),
             "status": true
           };
         }).toList();
