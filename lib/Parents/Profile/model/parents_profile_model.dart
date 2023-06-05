@@ -2,20 +2,20 @@
 
 import 'dart:convert';
 
-ParentsProfile parentsProfileFromJson(String str) => ParentsProfile.fromJson(json.decode(str));
+ParentsProfileModel parentsProfileFromJson(String str) => ParentsProfileModel.fromJson(json.decode(str));
 
-String parentsProfileToJson(ParentsProfile data) => json.encode(data.toJson());
+String parentsProfileToJson(ParentsProfileModel data) => json.encode(data.toJson());
 
-class ParentsProfile {
+class ParentsProfileModel {
     Data? data;
     String? message;
 
-    ParentsProfile({
+    ParentsProfileModel({
         this.data,
         this.message,
     });
 
-    factory ParentsProfile.fromJson(Map<String, dynamic> json) => ParentsProfile(
+    factory ParentsProfileModel.fromJson(Map<String, dynamic> json) => ParentsProfileModel(
         data: Data.fromJson(json["data"]),
         message: json["message"],
     );
