@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,14 +14,15 @@ import 'package:sakib_school/pages/Teachers/Section/controller/SectionController
 import '../../Classes/controller/ClassesController.dart';
 import 'package:http/http.dart' as http;
 
-class AttendancePage extends StatefulWidget {
-  const AttendancePage({super.key});
+class SingleAttendancePage extends StatefulWidget {
+  const SingleAttendancePage({super.key});
 
   @override
-  State<AttendancePage> createState() => _AttendancePageState();
+  State<SingleAttendancePage> createState() => _SingleAttendancePageState();
 }
 
-class _AttendancePageState extends State<AttendancePage> {
+class _SingleAttendancePageState extends State<SingleAttendancePage> {
+
   var stdCon = Get.put(StudentController());
   var classId;
   var sectionId;
@@ -219,7 +220,7 @@ class _AttendancePageState extends State<AttendancePage> {
       var finalData = jsonEncode(map);
 
       var response = await client.post(
-          Uri.parse("https://edufiy.alivedevs.cf/api/teacher/attendance-store"),
+          Uri.parse("https://edufiy.alivedevs.cf/api/single-attendance-store/1"),
           headers: {
             'Accept': 'application/json',
             'Authorization': 'Bearer ' + token,

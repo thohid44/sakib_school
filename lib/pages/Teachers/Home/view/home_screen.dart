@@ -7,6 +7,7 @@ import 'package:sakib_school/Utils/colors.dart';
 import 'package:sakib_school/Widget/app_drawer.dart';
 import 'package:sakib_school/Widget/custom_Appbar.dart';
 import 'package:sakib_school/pages/Teachers/Attendance/view/attendance_page.dart';
+import 'package:sakib_school/pages/Teachers/Attendance/view/single_attendance_page.dart';
 import 'package:sakib_school/pages/Teachers/Classes/controller/ClassesController.dart';
 
 
@@ -47,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 InkWell(
                     onTap: () {
                      
+                       Get.to(SingleAttendancePage()); 
+                    
                     },
                     child: deshboardItem(
                         title: " Attendence",
