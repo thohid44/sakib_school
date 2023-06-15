@@ -1,16 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sakib_school/Utils/colors.dart';
+import 'package:sakib_school/Utils/localstorekey.dart';
 import 'package:sakib_school/pages/Teachers/Attendance/controller/student_controller.dart';
 import 'package:sakib_school/pages/Teachers/Section/controller/SectionController.dart';
-
 import '../../Classes/controller/ClassesController.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,17 +19,18 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   var stdCon = Get.put(StudentController());
+  var sec = Get.put(SectionController());
   var classId;
   var sectionId;
   bool status = false;
   @override
   Widget build(BuildContext context) {
     var conCls = Get.put(ClassesController());
-    print(stdCon.sendAttendance.length);
-    conCls.fetchClass();
-    var sectionController = Get.put(SectionController());
-    sectionController.getSection();
-    print(sectionController.sections.length);
+    sec.getSection(); 
+    // print(stdCon.sendAttendance.length);
+    // conCls.fetchClass();
+
+    print("section ${sec.sections.length}");
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -73,11 +70,12 @@ class _AttendancePageState extends State<AttendancePage> {
                               .toList(),
                           onChanged: (value) {
                             classId = value;
-                            if (classId != null && sectionId != null) {
+                            print("class Id $classId");
+
+                            if (classId != null) {
                               setState(() {
                                 status = true;
                               });
-                              stdCon.getStudent(classId, sectionId);
                             }
                           });
                     }),
@@ -94,22 +92,22 @@ class _AttendancePageState extends State<AttendancePage> {
                           underline: SizedBox(),
                           icon: const Icon(Icons.keyboard_arrow_down),
                           value: sectionId,
-                          items: sectionController.sections
+                          items: sec.sections
                               .map((e) => DropdownMenuItem(
                                     value: e.id,
                                     child: Text(
-                                      "${e.name}",
+                                      "${e.name.toString()}",
                                     ),
                                   ))
                               .toList(),
                           onChanged: (value) {
                             sectionId = value;
-                            if (classId != null && sectionId != null) {
-                              setState(() {
-                                status = true;
-                              });
-                              stdCon.getStudent(classId, sectionId);
-                            }
+                            // if () {
+                            //   setState(() {
+                            //     status = true;
+                            //   });
+
+                            // }
                           });
                     }),
                   ),
@@ -124,12 +122,12 @@ class _AttendancePageState extends State<AttendancePage> {
                     height: 500.h,
                     child: GetBuilder<StudentController>(builder: (context) {
                       return ListView.builder(
-                          itemCount: stdCon.students.length,
+                          itemCount: stdCon.studentModel.length,
                           itemBuilder: (context, index) {
-                            var satus = stdCon.students[index].attendance;
+                            var satus = stdCon.studentModel[index];
                             return ListTile(
                               title: Text(
-                                stdCon.students[index].userName.toString(),
+                                stdCon.studentModel[index].name.toString(),
                                 style: TextStyle(color: Colors.black),
                               ),
                               trailing: Switch(
@@ -138,10 +136,11 @@ class _AttendancePageState extends State<AttendancePage> {
                                     for (int i = 0;
                                         i <= stdCon.sendAttendance.length;
                                         i++) {
-                                      if (stdCon.sendAttendance[i]
-                                                  ['student_id'] ==
+                                      if (stdCon.sendAttendance[i]['student_id']
+                                                  .toString() ==
                                               stdCon.sendAttendance[index]
-                                                  ['student_id'] &&
+                                                      ['student_id']
+                                                  .toString() &&
                                           stdCon.sendAttendance[index]
                                               ['status']) {
                                         setState(() {
@@ -149,9 +148,11 @@ class _AttendancePageState extends State<AttendancePage> {
                                               ['status'] = false;
                                         });
                                       } else if (stdCon.sendAttendance[i]
-                                                  ['student_id'] ==
+                                                      ['student_id']
+                                                  .toString() ==
                                               stdCon.sendAttendance[index]
-                                                  ['student_id'] &&
+                                                      ['student_id']
+                                                  .toString() &&
                                           stdCon.sendAttendance[index]
                                                   ['status'] ==
                                               false) {
@@ -179,7 +180,7 @@ class _AttendancePageState extends State<AttendancePage> {
             InkWell(
               onTap: () {
                 //  print(stdCon.sendAttendance);
-                saveAttendance();
+                sendAttendance();
               },
               child: Container(
                 alignment: Alignment.center,
@@ -204,36 +205,45 @@ class _AttendancePageState extends State<AttendancePage> {
   final _box = GetStorage();
   var client = http.Client();
   bool isLoading = false;
-  saveAttendance() async {
-    var token = "79|uYrWRG0rX9odolGNIA5n3POpYCaRTcbBYM8zMO43";
- print(stdCon.sendAttendance); 
-    print(classId);
+
+  sendAttendance() async {
+    var token = _box.read(LocalStoreKey.token);
+
+    var postUri =
+        Uri.parse("https://edufiy.alivedevs.cf/api/teacher/attendance-store");
+
+    Map<String, dynamic> map = {
+      "date": "25-05-2023",
+      "class_id": "1",
+      "section_id": "1",
+      "attendances": stdCon.sendAttendance
+    };
+    var finalmap = jsonEncode(map);
+
     try {
-      print("object");
-      var map = {
-        "date": "25-05-2023",
-        "class_id": "1",
-        "section_id": "1",
-        "attendance": "${stdCon.sendAttendance}"
-      };
-      var finalData = jsonEncode(map);
+      print("try");
+      var request = await http.post(postUri, body: finalmap, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token,
+      });
+      print("${request.body}");
 
-      var response = await client.post(
-          Uri.parse("https://edufiy.alivedevs.cf/api/teacher/attendance-store"),
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Bearer ' + token,
-          },
-          body: map);
-      print(response.body);
-      if (response.statusCode == 201) {
-        print(response.statusCode);
-        var jsonData = jsonDecode(response.body);
-
-        print(jsonData);
-      }
+      final resdata = request;
+      ;
+      if (resdata.statusCode == 202) {
+        print("ff ${resdata.body}");
+        Get.snackbar(
+          "Attendance",
+          "Successfully Save",
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.purple,
+        );
+      } else {}
+      print(resdata.body);
     } catch (e) {
-      print("Error $e");
+      print(e);
     }
   }
 }

@@ -1,27 +1,31 @@
 // To parse this JSON data, do
 //
-//     final clsToSecModel = clsToSecModelFromJson(jsonString);
+//     final classToSectionModel = classToSectionModelFromJson(jsonString);
 
 import 'dart:convert';
 
-ClsToSecModel clsToSecModelFromJson(String str) => ClsToSecModel.fromJson(json.decode(str));
+ClassToSectionModel classToSectionModelFromJson(String str) => ClassToSectionModel.fromJson(json.decode(str));
 
+String classToSectionModelToJson(ClassToSectionModel data) => json.encode(data.toJson());
 
-class ClsToSecModel {
+class ClassToSectionModel {
     Data? data;
     String? message;
 
-    ClsToSecModel({
+    ClassToSectionModel({
         this.data,
         this.message,
     });
 
-    factory ClsToSecModel.fromJson(Map<String, dynamic> json) => ClsToSecModel(
+    factory ClassToSectionModel.fromJson(Map<String, dynamic> json) => ClassToSectionModel(
         data: Data.fromJson(json["data"]),
         message: json["message"],
     );
 
-   
+    Map<String, dynamic> toJson() => {
+        "data": data!.toJson(),
+        "message": message,
+    };
 }
 
 class Data {
@@ -41,7 +45,11 @@ class Data {
         section: List<Section>.from(json["section"].map((x) => Section.fromJson(x))),
     );
 
-  
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "section": List<dynamic>.from(section!.map((x) => x.toJson())),
+    };
 }
 
 class Section {
