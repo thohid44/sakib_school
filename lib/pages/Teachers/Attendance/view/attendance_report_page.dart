@@ -1,47 +1,33 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:sakib_school/Utils/colors.dart';
-import 'package:sakib_school/Utils/localstorekey.dart';
 import 'package:sakib_school/pages/Teachers/Attendance/controller/student_controller.dart';
+import 'package:sakib_school/pages/Teachers/Classes/controller/ClassesController.dart';
 import 'package:sakib_school/pages/Teachers/Section/controller/SectionController.dart';
-import '../../Classes/controller/ClassesController.dart';
-import 'package:http/http.dart' as http;
 
-class AttendancePage extends StatefulWidget {
-  const AttendancePage({super.key});
+class AttendanceReportPage extends StatefulWidget {
+  const AttendanceReportPage({super.key});
 
   @override
-  State<AttendancePage> createState() => _AttendancePageState();
+  State<AttendanceReportPage> createState() => _AttendanceReportPageState();
 }
 
-class _AttendancePageState extends State<AttendancePage> {
-  var stdCon = Get.put(StudentController());
+class _AttendanceReportPageState extends State<AttendanceReportPage> {
+    var stdCon = Get.put(StudentController());
   var sec = Get.put(SectionController());
+  var conCls = Get.put(ClassesController()); 
   var classId;
   var sectionId;
   bool status = false;
   @override
   Widget build(BuildContext context) {
-    var conCls = Get.put(ClassesController());
-
-    
      conCls.fetchClass();
- 
-   
-    return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        title: Text("Attendance"),
-        centerTitle: true,
-        backgroundColor: baseColor,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
+    return Scaffold(
+      appBar: AppBar(), 
+      body: Column(
+        children: [
+
+          SizedBox(
               height: 10.h,
             ),
             Container(
@@ -75,7 +61,7 @@ class _AttendancePageState extends State<AttendancePage> {
                             if (classId != null) {
                               setState(() {
                                    sec.getSection(classId);
-                                status = true;
+                         
                               });
                             }
                           });
@@ -102,14 +88,17 @@ class _AttendancePageState extends State<AttendancePage> {
                                   ))
                               .toList(),
                           onChanged: (value) {
-                            sectionId = value;
-                            if (sectionId !=null) {
-                              setState(() {
+                      setState(() {
+                              sectionId = value;
+                              if (sectionId !=null && classId !=null && dateAttend !=null) {
+                           
                                 status = true;
-                                stdCon.getStudent(clsId: classId, sectionId: sectionId); 
-                              });
+                                stdCon.getAttendReport (clsId: classId, sectionId: sectionId, date: dateAttend); 
+                            
 
                             }
+                      });
+                          
                           });
                     }),
                   ),
@@ -120,7 +109,9 @@ class _AttendancePageState extends State<AttendancePage> {
             InkWell( 
               
               onTap: () {
+                
                  datePicker(context);
+                   
                 },
               child: Container(
                   width: 200.w,
@@ -139,134 +130,34 @@ class _AttendancePageState extends State<AttendancePage> {
             SizedBox(
               height: 10.h,
             ),
-            Container(
+           status ==true?  Container(
               height: 450.h,
               child: GetBuilder<StudentController>(builder: (context) {
                 return ListView.builder(
-                    itemCount: stdCon.studentModel.length,
+                    itemCount: stdCon.attendReports.length,
                     itemBuilder: (context, index) {
-                      var satus = stdCon.studentModel[index];
+                     var sts = stdCon.attendReports[index].attendance;
                       return ListTile(
                         title: Text(
-                          stdCon.studentModel[index].name.toString(),
+                          stdCon.attendReports[index].userName.toString(),
                           style: TextStyle(color: Colors.black),
                         ),
-                        trailing: Switch(
-                            value: stdCon.sendAttendance[index]['status'],
-                            onChanged: (value) {
-                              for (int i = 0;
-                                  i <= stdCon.sendAttendance.length;
-                                  i++) {
-                                if (stdCon.sendAttendance[i]['student_id']
-                                            .toString() ==
-                                        stdCon.sendAttendance[index]
-                                                ['student_id']
-                                            .toString() &&
-                                    stdCon.sendAttendance[index]['status']) {
-                                  setState(() {
-                                    stdCon.sendAttendance[index]['status'] =
-                                        false;
-                                  });
-                                } else if (stdCon.sendAttendance[i]
-                                                ['student_id']
-                                            .toString() ==
-                                        stdCon.sendAttendance[index]
-                                                ['student_id']
-                                            .toString() &&
-                                    stdCon.sendAttendance[index]['status'] ==
-                                        false) {
-                                  setState(() {
-                                    stdCon.sendAttendance[index]['status'] =
-                                        true;
-                                  });
-                                }
-                                //print(mobile);
-                              }
-                            }),
+                        trailing:sts==0? Text("A"):Text("p")
                       );
                     });
               }),
+            ):Center(
+              child: CircularProgressIndicator(),
             ),
-            // : Center(
-            //     child: Text(
-            //       "Select Date, Class and Section",
-            //       style: TextStyle(
-            //         color: Colors.black,
-            //         fontSize: 20.sp,
-            //       ),
-            //     ),
-            //   ),
-            InkWell(
-              onTap: () {
-                //  print(stdCon.sendAttendance);
-                sendAttendance();
-              },
-              child: Container(
-                alignment: Alignment.center,
-                width: 150.w,
-                height: 40.h,
-                decoration: BoxDecoration(color: baseColor),
-                child: Text(
-                  "Submit",
-                  style: TextStyle(
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-              ),
-            )
-          ],
-        ),
+        ],
       ),
-    ));
+    );
   }
-
-  final _box = GetStorage();
-  var client = http.Client();
-  bool isLoading = false;
-
-  sendAttendance() async {
-    var token = _box.read(LocalStoreKey.token);
-    print("token $token");
-    var postUri =
-        Uri.parse("https://edufiy.alivedevs.cf/api/teacher/attendance-store");
-
-    Map<String, dynamic> map = {
-      "date": dateDairy,
-      "class_id": classId,
-      "section_id": sectionId,
-      "attendances": stdCon.sendAttendance
-    };
-    var finalmap = jsonEncode(map); 
-
-    try {
-      print(finalmap); 
-      print("try");
-      var request = await http.post(postUri, body: finalmap, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ' + token,
-      });
-      print("map ${request.body}");
-
-      if (request.statusCode == 201) {
-        Get.snackbar(
-          "Attendance",
-          "Successfully Save",
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.purple,
-        );
-      } else {}
-    } catch (e) {
-      print(e);
-    }
-  }
-
+  
      DateTime pickDate = DateTime.now();
  DateTime deliveryDate = DateTime.now();
   String? selectedDateForBackendDeveloper;
-  var dateDairy;
+  var dateAttend;
 bool dateStatus = false; 
 datePicker(context) async {
     DateTime? userSelectedDate = await showDatePicker(
@@ -288,11 +179,10 @@ datePicker(context) async {
          dateStatus = true; 
         pickDate = userSelectedDate;
       print(pickDate); 
-        dateDairy =
-            "${pickDate.year}-${pickDate.month}-${pickDate.day}";
-        print("Date $dateDairy");
+        dateAttend =
+            "${pickDate.day}-${pickDate.month}-${pickDate.year}";
+        print("Date $dateAttend");
       });
     }
   }
-
 }

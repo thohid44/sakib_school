@@ -4,10 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:sakib_school/Utils/colors.dart';
 import 'package:sakib_school/Widget/app_drawer.dart';
-import 'package:sakib_school/Widget/custom_Appbar.dart';
-import 'package:sakib_school/pages/Teachers/Attendance/view/attendance_page.dart';
 
-import 'package:sakib_school/pages/Teachers/Classes/controller/ClassesController.dart';
+import 'package:sakib_school/pages/Teachers/Attendance/view/attendance_page.dart';
+import 'package:sakib_school/pages/Teachers/Attendance/view/attendance_report_page.dart';
+
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,9 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    var conCls = Get.put(ClassesController());
-    conCls.fetchClass();
-
+ 
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -40,9 +39,11 @@ class _HomeScreenState extends State<HomeScreen> {
           crossAxisSpacing: 10.w,
           children: [
             InkWell(
-                onTap: () {},
+                onTap: () {
+                  Get.to(AttendanceReportPage());
+                },
                 child: deshboardItem(
-                    title: " Attendence", imageLInk: "assets/attendance.png")),
+                    title: " Attendence Report", imageLInk: "assets/attendance.png")),
             InkWell(
                 onTap: () {
                   Get.to(AttendancePage());
