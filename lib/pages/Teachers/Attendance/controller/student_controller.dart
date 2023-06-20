@@ -2,15 +2,10 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:sakib_school/Utils/localstorekey.dart';
-import 'package:sakib_school/Utils/preKey.dart';
 import 'package:sakib_school/pages/Teachers/Attendance/model/student_list_model.dart';
 
-import 'package:sakib_school/pages/Teachers/Classes/model/ClassModel.dart';
 import 'package:http/http.dart' as http;
-import 'package:sakib_school/pages/Teachers/Section/model/class_To_sec_Model.dart';
 
-import '../model/student_model.dart';
 
 class StudentController extends GetxController {
   var isLoading = false.obs;
