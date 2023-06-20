@@ -5,7 +5,7 @@ import 'package:get_storage/get_storage.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:sakib_school/Utils/localstorekey.dart';
-import 'package:sakib_school/Utils/preKey.dart';
+
 import 'package:sakib_school/pages/Teachers/Section/model/SectionModel.dart';
 import 'package:sakib_school/pages/Teachers/Section/model/class_To_sec_Model.dart';
 
@@ -16,7 +16,7 @@ class SectionController extends GetxController {
   List<Section> sections = <Section>[].obs;
   final _box = GetStorage();
   getSection() async {
-    var token = _box.read(Prekey.token);
+    var token = _box.read(LocalStoreKey.token);
 
     print("section Token $token");
     try {

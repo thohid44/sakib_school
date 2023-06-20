@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:sakib_school/Utils/preKey.dart';
+import 'package:sakib_school/Utils/localstorekey.dart';
+
 import 'package:sakib_school/pages/Teachers/Home/view/home_screen.dart';
 
 class LoginController extends GetxController {
@@ -32,7 +33,7 @@ class LoginController extends GetxController {
         print(jsonData);
         var token = jsonData['token'];
         print("test token $token"); 
-        _box.write(Prekey.token, token);
+        _box.write(LocalStoreKey.token, token);
 
         if (token != null) {
           Get.to(HomeScreen());
